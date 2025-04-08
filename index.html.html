@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hegazy store</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            background: #fefbf6;
+            color: #2c2c2c;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            padding: 20px;
+        }
+        h2, h3 {
+            text-align: center;
+            color: #2b2b2b;
+            font-size: 2.2em;
+        }
+        form {
+            max-width: 400px;
+            margin: 20px auto;
+            background: #fff;
+            padding: 25px;
+            border: 2px dashed #444;
+            border-radius: 12px;
+            box-shadow: 3px 3px 0px #ccc;
+        }
+        input, .search-bar, select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #aaa;
+            border-radius: 5px;
+            background-color: #fdfdfd;
+            font-family: 'Handjet', cursive;
+            font-size: 1.2em;
+        }
+        button {
+            padding: 10px;
+            background: #fffbfb00;
+            color: #050505;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2em;
+            cursor: pointer;
+            font-family: 'Handjet', cursive;
+        }
+        button:hover {
+            background: #54b4ac;
+        }
+        .link {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 1.2em;
+        }
+        .link a {
+            color: #007bff;
+            text-decoration: underline;
+        }
+        .hidden {
+            display: none;
+        }
+        .product {
+            background: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1.5px dashed #777;
+            box-shadow: 2px 2px 0 #ccc;
+            margin: 10px;
+            flex: 1 1 200px;
+            text-align: center;
+        }
+        .product img {
+            width: 100%;
+            height: auto;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+        .filters {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .products {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        .add-to-cart {
+            margin-top: 10px;
+            background: #fff3f300;
+        }
+        .cart-section {
+            margin-top: 30px;
+            background: #fff;
+            padding: 20px;
+            border: 2px dashed #888;
+            border-radius: 10px;
+            box-shadow: 3px 3px 0 #ccc;
+        }
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+        .logout-btn {
+            margin-top: 20px;
+            background: #e53935;
+        }
+        #checkout-form {
+            background: #fff;
+            border: 2px dashed #444;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 10px;
+            box-shadow: 2px 2px 0 #ccc;
+        }
+        .tracking-page {
+            padding: 30px;
+            background: #fff;
+            border: 2px dashed #999;
+            border-radius: 12px;
+            box-shadow: 3px 3px 0 #ccc;
+            max-width: 500px;
+            margin: 40px auto;
+            text-align: center;
+        }
+        .cart-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .cart-controls button {
+            padding: 5px 10px;
+            font-size: 1em;
+        }
+        @media (max-width: 600px) {
+            .products {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div id="shop-section">
+        <h2>🛍️ Hegazy Shop</h2>
+        <div class="filters">
+            <input type="text" class="search-bar" id="searchInput" placeholder="🔍 Search for products..." onkeyup="filterProducts()">
+            <select id="typeFilter" onchange="filterProducts()">
+                <option value="">All Types</option>
+                <option value="men">رجالي</option>
+                <option value="women">حريمي</option>
+            </select>
+            <select id="priceFilter" onchange="filterProducts()">
+                <option value="">All Prices</option>
+                <option value="2000">أقل من 2000</option>
+                <option value="3000">أقل من 3000</option>
+                <option value="4000">أقل من 4000</option>
+            </select>
+        </div>
+        <div class="products" id="products"></div>
+        <div class="cart-section">
+            <h3>🛒 Your Cart</h3>
+            <div id="cart-items"></div>
+            <p id="total"></p>
+            <button onclick="checkout()">Checkout</button>
+            <div id="checkout-form" class="hidden">
+                <h3>Enter Payment Details</h3>
+                <select id="shoeSize">
+                    <option value="">Select Shoe Size</option>
+                    <option>38</option>
+                    <option>39</option>
+                    <option>40</option>
+                    <option>41</option>
+                    <option>42</option>
+                    <option>43</option>
+                    <option>44</option>
+                </select>
+                <input type="text" id="cardName" placeholder="Name on Card">
+                <input type="text" id="cardNumber" placeholder="Card Number">
+                <input type="text" id="expDate" placeholder="MM/YY">
+                <input type="text" id="cvv" placeholder="CVV">
+                <button onclick="payNow()">Pay</button>
+            </div>
+        </div>
+    </div>
+    <div id="tracking-section" class="tracking-page hidden">
+        <h2>📦 Order Tracking</h2>
+        <p>✅ Your order has been confirmed!</p>
+        <p>🚚 Estimated Delivery: <strong>2 Days</strong></p>
+        <p>🔁 You will receive updates by email.</p>
+        <button onclick="backToShop()">Back to Shop</button>
+    </div>
+</div>
+<script>
+const products = [
+    { name: "Nike V2K", price: 2899, image: "images/Balenciaga-Track-White.jpg", type: "men" },
+    { name: "On Running Cloud 5", price: 2899, image: "images/download (1).jpeg", type: "women" },
+    { name: "Adidas Samba OG", price: 3199, image: "images/download (2).jpeg", type: "men" },
+    { name: "Nike Dunk Low - Panda", price: 3499, image: "images/download (3).jpeg", type: "women" },
+    { name: "Adidas Samba OG", price: 3199, image: "images/download (4).jpeg", type: "men" },
+    { name: "Adidas Samba OG", price: 3199, image: "images/download (5).jpeg", type: "men" },
+    { name: "Adidas Samba OG", price: 3199, image: "images/download (6).jpeg", type: "men" },
+    { name: "Adidas Samba OG", price: 3199, image: "images/download.jpeg", type: "men" },
+];
+
+const user = "demo-user";
+const cartKey = `cart_${user}`;
+
+function renderProducts(filter = "") {
+    const typeFilter = document.getElementById("typeFilter").value;
+    const priceFilter = document.getElementById("priceFilter").value;
+
+    const productsDiv = document.getElementById("products");
+    productsDiv.innerHTML = "";
+    products
+        .filter(p =>
+            p.name.toLowerCase().includes(filter.toLowerCase()) &&
+            (!typeFilter || p.type === typeFilter) &&
+            (!priceFilter || p.price <= parseInt(priceFilter))
+        )
+        .forEach(product => {
+            const div = document.createElement("div");
+            div.className = "product";
+            div.innerHTML = `
+                <img src="${product.image}" alt="${product.name}">
+                <h4>${product.name}</h4>
+                <p>${product.price} EGP</p>
+                <button class="add-to-cart" onclick='addToCart(${JSON.stringify(product)})'>Add to Cart</button>
+            `;
+            productsDiv.appendChild(div);
+        });
+}
+
+function filterProducts() {
+    const input = document.getElementById("searchInput").value;
+    renderProducts(input);
+}
+
+function addToCart(product) {
+    const cart = JSON.parse(localStorage.getItem(cartKey) || "[]");
+    cart.push(product);
+    localStorage.setItem(cartKey, JSON.stringify(cart));
+    renderCart();
+}
+
+function removeFromCart(index) {
+    const cart = JSON.parse(localStorage.getItem(cartKey) || "[]");
+    cart.splice(index, 1);
+    localStorage.setItem(cartKey, JSON.stringify(cart));
+    renderCart();
+}
+
+function renderCart() {
+    const cart = JSON.parse(localStorage.getItem(cartKey) || "[]");
+    const cartItems = document.getElementById("cart-items");
+    const totalEl = document.getElementById("total");
+    cartItems.innerHTML = "";
+    let total = 0;
+    cart.forEach((item, index) => {
+        total += item.price;
+        const div = document.createElement("div");
+        div.className = "cart-item";
+        div.innerHTML = `
+            <span>${item.name} - ${item.price} EGP</span>
+            <div class="cart-controls">
+                <button onclick="removeFromCart(${index})">Remove</button>
+            </div>
+        `;
+        cartItems.appendChild(div);
+    });
+    totalEl.textContent = "Total: " + total + " EGP";
+}
+
+function checkout() {
+    document.getElementById("checkout-form").classList.remove("hidden");
+}
+
+function payNow() {
+    alert("Payment Successful 🎉 Thank you for your order!");
+    localStorage.removeItem(cartKey);
+    document.getElementById("shop-section").classList.add("hidden");
+    document.getElementById("tracking-section").classList.remove("hidden");
+}
+
+function backToShop() {
+    document.getElementById("tracking-section").classList.add("hidden");
+    document.getElementById("shop-section").classList.remove("hidden");
+    renderCart();
+}
+
+renderProducts();
+renderCart();
+</script>
+</body>
+</html>
